@@ -10,7 +10,6 @@
 ### インスタンス
 - KeyPairが作成されている
 - SecurityGroupが作成されている
-- IAMRoleが作成されている
 
 ## OS設定
 
@@ -25,12 +24,16 @@ sudo passwd steam
 sudo gpasswd -a steam sudo
 ```
 
+3. steamユーザのHomeディレクトリへ移動
+```bash
+sudo -u steam -s
+cd /home/steam
+```
+
 ## SteamCMDのインストール
 1. マルチバースリポジトリとx86パッケージを有効化
 ```bash
-sudo add-apt-repository multiverse
-sudo dpkg --add-architecture i386
-sudo apt update
+sudo add-apt-repository multiverse; sudo dpkg --add-architecture i386; sudo apt update
 ```
 2. SteamCMDをインストール
 ```bash
@@ -53,7 +56,12 @@ curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.g
 ```
 
 ## SteamCMDの起動と設定
-1. SteamCMDを起動
+1. palworldディレクトリの作成
+```bash
+mkdir /home/steam/Steam/palworld/
+```
+
+2. SteamCMDを起動
 ```bash
 ./steamcmd.sh
 ```
@@ -63,15 +71,23 @@ curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.g
 login anonymous
 force_install_dir /home/steam/Steam/palworld/
 app_update 2394010 validate
+quit
 ```
-3. 必要なディレクトリとシンボリックリンクを作成
+
+3. Palworldサーバの起動
 ```bash
-mkdir .steam
-cd .steam
-mkdir sdk64
+sudo -u steam -s
+cd /home/steam/Steam/palworld/
+./PalServer.sh
+```
+
+3. サーバ起動がエラーになる場合、必要なディレクトリとシンボリックリンクを作成
+```bash
+cd /home/steam/Steam/palworld/
+mkdir -p .steam/sdk64
 ln -s /home/steam/Steam/palworld/linux64/steamclient.so /home/steam/Steam/.steam/sdk64/
 ln -s /home/steam/Steam/palworld/linux64/steamclient.so /home/steam/.steam/sdk64/
 ```
 
 参考:
-Valve Developer Community-SteamCMD(https://developer.valvesoftware.com/wiki/SteamCMD)
+[Valve Developer Community-SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD)
